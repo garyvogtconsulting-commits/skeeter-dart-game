@@ -5,6 +5,16 @@ const express = require("express");
 const app = express();
 app.use(express.json({ limit: "2mb" }));
 
+// CORS: lets the Vapi dashboard "Test Tool" panel call this server from the
+// browser. Real Vapi tool calls are server-to-server and don't need this.
+app.use((req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
 // ---------- In-memory game state, keyed by Vapi call ID ----------
 // Note: state resets if the server restarts. Fine for game night.
 // Swap for Supabase later if you want persistent standing records.
