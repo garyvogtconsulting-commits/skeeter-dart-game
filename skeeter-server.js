@@ -76,6 +76,7 @@ function currentTarget(p) {
   if (p.finished) return "DONE";
   if (p.onDoubleOut) return "any DOUBLE on the board (double out)";
   if (p.onBull) return "the BULL";
+  if (!p.doubledIn) return "any DOUBLE on the board (to double in)";
   return `the ${p.sequence[p.pos]}`;
 }
 
@@ -108,7 +109,7 @@ function toolResolveFirstThrow(game, args) {
     if (!best || dist < best.dist) best = { player: t.player, dist };
   }
   game.firstThrowResolved = true;
-  return `The secret number was ${game.secret}! Closest was ${best.player}, so ${best.player} throws first. EVERY player's first target is the ${game.secret}, and they must DOUBLE IN: only a double on the ${game.secret} counts to get on the board.`;
+  return `The secret number was ${game.secret}! Closest was ${best.player}, so ${best.player} throws first. Every player must DOUBLE IN first: hit ANY double anywhere on the board to get started (the double-in scores no points). After doubling in, their first scoring target is the ${game.secret}.`;
 }
 
 function toolRecordScore(game, args) {
@@ -125,12 +126,11 @@ function toolRecordScore(game, args) {
   if (p.onDoubleOut) {
     // Final stage: player must hit ANY double on the board to end the game.
     if (hit === "double") {
-      p.total += 2;
       p.onDoubleOut = false;
       p.finished = true;
       game.winner = p.display;
       const recordNote = recordCheck(p);
-      msg = `DOUBLE OUT! 2 points for ${p.display}, final total: ${p.total}. ${p.display} WINS! ${recordNote} Sing the victory song!`;
+      msg = `DOUBLE OUT! The closing double scores nothing, but it don't need to. Final total: ${p.total}. ${p.display} WINS! ${recordNote} Sing the victory song!`;
     } else if (hit === "miss") {
       msg = `Miss. ${p.display} still needs ANY double on the board to go out. Total holds at ${p.total}.`;
     } else {
@@ -154,16 +154,15 @@ function toolRecordScore(game, args) {
       msg = `${p.display} is on the BULL. Only green_bull, red_bull, or miss count here. No points. Total: ${p.total}.`;
     }
   } else if (!p.doubledIn) {
-    // Must double in on the secret number (their first target).
+    // Must double in first: ANY double on the board, scores 0 points.
+    // Only after that can they start scoring, beginning with the secret number.
     if (hit === "double") {
       p.doubledIn = true;
-      p.total += 2;
-      p.pos++;
-      msg = `DOUBLE IN! ${p.display} is on the board. 2 points, total: ${p.total}. Next target: ${currentTarget(p)}.`;
+      msg = `DOUBLE IN! ${p.display} is on the board. The double-in scores nothing, total: ${p.total}. First scoring target: ${currentTarget(p)}.`;
     } else if (hit === "miss") {
-      msg = `Miss. ${p.display} still needs a DOUBLE on the ${p.sequence[p.pos]} to get in. Total: 0.`;
+      msg = `Miss. ${p.display} still needs ANY double on the board to get in. Total: ${p.total}.`;
     } else {
-      msg = `Nice throw but it don't count: ${p.display} must DOUBLE IN first. Still hunting a double on the ${p.sequence[p.pos]}. Total: 0.`;
+      msg = `Nice throw but it don't count: ${p.display} must DOUBLE IN first. Any double on the board gets you started. Total: ${p.total}.`;
     }
   } else {
     // Normal play through the 20 numbers.

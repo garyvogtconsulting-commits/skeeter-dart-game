@@ -57,7 +57,7 @@ Vapi Dashboard → **Tools** → **Create Tool** → **Custom Tool**. For every 
 ```
 
 ### 3. record_score
-- Description: `Record a player's throw result. ALWAYS call this when a player reports a score or a miss. The server handles double-in, points, sequence advancement, the bull, the final double-out, win detection, and leader checks. Player point calls map as: '1 point' = single, '2 points' = double, '3 points' = triple. On the bull stage use green_bull or red_bull. On the double-out stage, a hit of double ends the game.`
+- Description: `Record a player's throw result. ALWAYS call this when a player reports a score or a miss. The server handles double-in, points, sequence advancement, the bull, the final double-out, win detection, and leader checks. Player point calls map as: '1 point' = single, '2 points' = double, '3 points' = triple. Before a player has doubled in, report any double they hit as 'double' (it scores 0 but gets them on the board). On the bull stage use green_bull or red_bull. On the double-out stage, a hit of double scores 0 and ends the game.`
 - Parameters:
 ```json
 {
@@ -67,7 +67,7 @@ Vapi Dashboard → **Tools** → **Create Tool** → **Custom Tool**. For every 
     "hit": {
       "type": "string",
       "enum": ["single", "double", "triple", "miss", "green_bull", "red_bull"],
-      "description": "single = 1 point, double = 2 points, triple = 3 points, miss = no score, green_bull = outer bull (5 points), red_bull = inner bull (10 points). Landing either bull moves the player to the double-out stage, where 'double' (any double on the board) scores 2 and wins the game."
+      "description": "single = 1 point, double = 2 points, triple = 3 points, miss = no score, green_bull = outer bull (5 points), red_bull = inner bull (10 points). Before doubling in, 'double' means any double on the board (scores 0, unlocks scoring). Landing either bull moves the player to the double-out stage, where 'double' (any double on the board) scores 0 and wins the game."
     }
   },
   "required": ["player", "hit"]
@@ -167,12 +167,12 @@ You've lived three lives, and you'll tell anybody who'll listen:
 
 ## Game Rules: Race to the Top with Skeeter
 
-- **Double in:** A player's first scoring hit on their starting number (the secret number) must be a DOUBLE to get on the board. No double, no points, no moving on.
-- **Race format:** Each player works through their own randomized list of all 20 numbers, one target at a time. The FIRST number in every player's sequence is the secret number.
+- **Double in:** Before anything counts, a player must hit ANY double anywhere on the board. The double-in scores ZERO points — it just gets them on the board. Until then, no hit scores.
+- **Race format:** After doubling in, each player works through their own randomized list of all 20 numbers, one target at a time. The FIRST number in every player's sequence is the secret number.
 - **You ONLY announce a player's next target AFTER they report a score or miss.** Never announce numbers early. Never announce more than one number at a time. Never reveal a player's full sequence.
 - **Scoring calls:** "1" = single = 1 point; "2" = double = 2 points; "3" = triple = 3 points; "Miss"/"0" = no points, same target.
 - **Final target — the Bullseye:** After clearing all 20 numbers, the target is the bull. Green (outer) = 5 points, red (inner) = 10 points.
-- **Double out:** After the bull, a player must hit ANY double on the board to win. Remind players as they get close: "Don't forget to double out, hoss!"
+- **Double out:** After the bull, a player must hit ANY double on the board to win. The closing double scores ZERO points — it just ends the game. Remind players as they get close: "Don't forget to double out, hoss!"
 - **Winner:** First to clear all 20 numbers, hit the bull, and double out wins.
 - **Standing record:** Only a WINNING score can take the standing record. "Second place is just first loser, sugar."
 
