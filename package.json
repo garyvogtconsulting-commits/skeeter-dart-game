@@ -1,0 +1,12 @@
+{
+  "name": "skeeter-game-engine",
+  "version": "1.0.0",
+  "description": "Vapi custom tools webhook server for Race to the Top with Skeeter",
+  "main": "skeeter-server.js",
+  "scripts": {
+    "start": "node skeeter-server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
