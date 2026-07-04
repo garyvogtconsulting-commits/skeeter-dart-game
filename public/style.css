@@ -1,0 +1,192 @@
+/* Race to the Top with Skeeter - saloon theme */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(ellipse at 50% -20%, #3a2716 0%, #1a120b 70%),
+    #1a120b;
+  color: #f3e9d2;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 14px 10px 6px;
+}
+header h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  letter-spacing: 1px;
+  color: #f0c96a;
+  text-shadow: 0 2px 0 #4a2f16;
+}
+header h1 span { color: #c9b58f; font-style: italic; font-size: 0.8em; }
+
+.hidden { display: none !important; }
+
+.screen { padding: 10px; }
+
+/* ---------- setup ---------- */
+#setup { display: grid; place-items: center; min-height: 70vh; }
+.card {
+  background: #2b1d12;
+  border: 2px solid #6b4423;
+  border-radius: 14px;
+  padding: 26px 30px;
+  width: min(420px, 92vw);
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+}
+.card h2 { margin-top: 0; color: #f0c96a; }
+#name-list input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 6px 0;
+  font-size: 1.05rem;
+  background: #1a120b;
+  color: #f3e9d2;
+  border: 1px solid #6b4423;
+  border-radius: 8px;
+  font-family: inherit;
+}
+#name-list input:focus { outline: 2px solid #f0c96a; }
+
+.btn {
+  font-family: inherit;
+  font-size: 1rem;
+  border: 2px solid #6b4423;
+  background: #8a5a2b;
+  color: #fff6e0;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn:hover { filter: brightness(1.15); }
+.btn:active { transform: translateY(1px); }
+.btn.big { width: 100%; font-size: 1.25rem; background: #b33a2e; border-color: #7a2018; margin-top: 16px; }
+.btn.ghost { background: transparent; color: #c9b58f; }
+.btn.miss { background: #444; border-color: #222; font-size: 1.1rem; }
+.btn:disabled { opacity: .4; cursor: default; }
+
+/* ---------- game layout ---------- */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.board-side { flex: 1 1 420px; max-width: 560px; }
+.panel-side { flex: 1 1 320px; max-width: 460px; }
+
+#board-wrap { width: 100%; }
+#board { width: 100%; height: auto; display: block; user-select: none; }
+
+#board path[data-seg], #board circle[data-seg] { cursor: pointer; }
+#board .hot {
+  stroke: #ffd75e !important;
+  stroke-width: 3.5 !important;
+  filter: drop-shadow(0 0 6px #ffd75e);
+}
+#board.locked path[data-seg], #board.locked circle[data-seg] { cursor: default; opacity: .75; }
+
+.board-buttons { display: flex; gap: 10px; justify-content: center; }
+
+/* ---------- skeeter panel ---------- */
+#skeeter-panel {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+#skeeter { width: 96px; flex: 0 0 96px; }
+#skeeter.talking { animation: bounce .5s ease-in-out infinite; }
+@keyframes bounce { 50% { transform: translateY(-4px) rotate(-2deg); } }
+
+#bubble {
+  position: relative;
+  background: #fff6e0;
+  color: #2b1d12;
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-height: 60px;
+  flex: 1;
+  font-size: 1.02rem;
+  line-height: 1.35;
+  box-shadow: 0 4px 14px rgba(0,0,0,.4);
+}
+#bubble::before {
+  content: "";
+  position: absolute;
+  left: -10px; top: 26px;
+  border: 10px solid transparent;
+  border-right-color: #fff6e0;
+  border-left: 0;
+}
+#bubble-text { margin: 0; }
+
+/* ---------- scoreboard ---------- */
+#scoreboard {
+  background: #2b1d12;
+  border: 2px solid #6b4423;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.sb-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #4a2f16;
+  color: #f0c96a;
+  font-size: .95rem;
+}
+.sb-row {
+  display: grid;
+  grid-template-columns: 1.4fr .6fr 1.6fr;
+  gap: 6px;
+  padding: 10px 12px;
+  border-top: 1px solid #4a2f16;
+  align-items: center;
+}
+.sb-row.turn { background: #3d2a17; box-shadow: inset 4px 0 0 #f0c96a; }
+.sb-row .nm { font-weight: bold; font-size: 1.05rem; }
+.sb-row.turn .nm::after { content: " 🎯"; }
+.sb-row .pts { font-size: 1.3rem; color: #f0c96a; text-align: center; }
+.sb-row .tgt { font-size: .9rem; color: #c9b58f; text-align: right; }
+.sb-row.done { opacity: .6; }
+
+#status-line {
+  margin-top: 12px;
+  text-align: center;
+  color: #c9b58f;
+  font-style: italic;
+  min-height: 1.4em;
+}
+
+/* ---------- win overlay ---------- */
+#win-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 6, 3, .82);
+  display: grid; place-items: center;
+  z-index: 50;
+}
+.win-card {
+  background: #2b1d12;
+  border: 3px solid #f0c96a;
+  border-radius: 16px;
+  padding: 30px 36px;
+  text-align: center;
+  width: min(440px, 92vw);
+  box-shadow: 0 0 60px rgba(240, 201, 106, .35);
+}
+.win-card h2 { font-size: 2rem; color: #f0c96a; margin: 0 0 10px; }
+.win-card p { font-size: 1.05rem; line-height: 1.4; }
+
+@media (max-width: 720px) {
+  #skeeter { width: 72px; flex-basis: 72px; }
+}

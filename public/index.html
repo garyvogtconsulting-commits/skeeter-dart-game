@@ -3,18 +3,96 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Skeeter Darts</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background: #1a120b; color: #f3e9d2;
-           display: grid; place-items: center; min-height: 100vh; margin: 0; text-align: center; }
-    h1 { font-size: 2.2rem; margin-bottom: .3rem; }
-    p { color: #c9b58f; }
-  </style>
+  <title>Race to the Top with Skeeter</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div>
-    <h1>🎯 Race to the Top with Skeeter</h1>
-    <p>The dartboard's comin', hoss. Game engine's already live at <code>/api</code>.</p>
+
+  <header>
+    <h1>🎯 Race to the Top <span>with Skeeter</span></h1>
+  </header>
+
+  <!-- ============ SETUP SCREEN ============ -->
+  <section id="setup" class="screen">
+    <div class="card">
+      <h2>Who's playin', y'all?</h2>
+      <div id="name-list"></div>
+      <button id="add-player" class="btn ghost">+ Add player</button>
+      <button id="start-game" class="btn big">Rack 'em up!</button>
+    </div>
+  </section>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <section id="game" class="screen hidden">
+    <div class="layout">
+
+      <div class="board-side">
+        <div id="board-wrap">
+          <svg id="board" viewBox="0 0 500 500" role="img" aria-label="dartboard"></svg>
+        </div>
+        <div class="board-buttons">
+          <button id="miss-btn" class="btn miss">MISS ✗</button>
+          <button id="pass-btn" class="btn ghost">Hand over the darts →</button>
+        </div>
+      </div>
+
+      <div class="panel-side">
+
+        <div id="skeeter-panel">
+          <svg id="skeeter" viewBox="0 0 120 120" aria-label="Skeeter">
+            <!-- hat -->
+            <ellipse cx="60" cy="38" rx="44" ry="10" fill="#6b4423"/>
+            <path d="M38 38 Q38 12 60 12 Q82 12 82 38 Z" fill="#8a5a2b"/>
+            <ellipse cx="60" cy="38" rx="44" ry="10" fill="none" stroke="#4a2f16" stroke-width="2"/>
+            <rect x="40" y="30" width="40" height="7" fill="#4a2f16"/>
+            <!-- face -->
+            <circle cx="60" cy="66" r="26" fill="#e8b88a"/>
+            <!-- eyes -->
+            <circle cx="51" cy="60" r="3" fill="#2b1d12"/>
+            <circle cx="69" cy="60" r="3" fill="#2b1d12"/>
+            <path d="M46 54 q5 -4 10 -1" stroke="#2b1d12" stroke-width="2" fill="none"/>
+            <path d="M64 53 q5 -3 10 1" stroke="#2b1d12" stroke-width="2" fill="none"/>
+            <!-- nose -->
+            <path d="M60 62 q4 8 0 10" stroke="#c98d5a" stroke-width="2.5" fill="none"/>
+            <!-- mustache -->
+            <path d="M44 76 q8 -7 16 -1 q8 -6 16 1 q-8 9 -16 4 q-8 5 -16 -4" fill="#9c8b7a"/>
+            <!-- mouth -->
+            <path d="M54 84 q6 4 12 0" stroke="#7a4a2a" stroke-width="2" fill="none"/>
+            <!-- bandana -->
+            <path d="M36 90 q24 14 48 0 l-6 14 q-18 10 -36 0 Z" fill="#b33a2e"/>
+            <!-- stubble dots -->
+            <circle cx="44" cy="72" r="1" fill="#9c8b7a"/><circle cx="76" cy="72" r="1" fill="#9c8b7a"/>
+            <circle cx="47" cy="80" r="1" fill="#9c8b7a"/><circle cx="73" cy="80" r="1" fill="#9c8b7a"/>
+          </svg>
+          <div id="bubble">
+            <p id="bubble-text">Well howdy! Tell me who's playin'.</p>
+          </div>
+        </div>
+
+        <div id="scoreboard">
+          <div class="sb-head">
+            <span>Scoreboard</span>
+            <span id="record-line">Record: none yet</span>
+          </div>
+          <div id="sb-rows"></div>
+        </div>
+
+        <div id="status-line"></div>
+        <button id="new-game" class="btn ghost hidden">↺ New game</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ WIN OVERLAY ============ -->
+  <div id="win-overlay" class="hidden">
+    <div class="win-card">
+      <h2 id="win-title">🏆</h2>
+      <p id="win-text"></p>
+      <button id="win-again" class="btn big">Play again</button>
+    </div>
   </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
