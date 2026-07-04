@@ -4,7 +4,8 @@
   "description": "Vapi custom tools webhook server for Race to the Top with Skeeter",
   "main": "skeeter-server.js",
   "scripts": {
-    "start": "node skeeter-server.js"
+    "start": "node skeeter-server.js",
+    "test": "node test-game.js"
   },
   "dependencies": {
     "express": "^4.19.2"
